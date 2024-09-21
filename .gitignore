@@ -1,0 +1,19 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+.venv/
+venv/
+ENV/
+
+# PyQt build files
+*.pyc
+*.pyo
+
+# MacOS specific
+.DS_Store
+
+# Windows specific
+Thumbs.db
