@@ -12,6 +12,7 @@ class PlayerModel:
         self.number = number
         self.fouls = fouls
         self.points = points
+        self.Team = None
 
     def commit_foul(self):
         """
@@ -28,6 +29,8 @@ class PlayerModel:
         """
         self.points += points
         print(f"{self.name} scored {points} points. Total points: {self.points}")
+        if self.Team != None:
+            self.Team.increment_score(points)
 
     def reset_stats(self):
         """
@@ -36,6 +39,9 @@ class PlayerModel:
         self.fouls = 0
         self.points = 0
         print(f"{self.name}'s stats reset.")
+    
+    def set_currentTeam(self, Team):
+        self.Team = Team
 
 # __main__ function to test PlayerModel class
 if __name__ == "__main__":
