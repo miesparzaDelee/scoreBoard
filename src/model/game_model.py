@@ -1,3 +1,4 @@
+from model.stopwatch_timer import StopwatchTimer
 from model.team_model import TeamModel
 
 class GameModel:
@@ -5,6 +6,7 @@ class GameModel:
         # Initialize the game with two teams
         self.team1 = TeamModel("Team 1")
         self.team2 = TeamModel("Team 2")
+        #self.gameTime = GameTimeModel()
 
     def increment_team_score(self, team_number, points=1):
         """
