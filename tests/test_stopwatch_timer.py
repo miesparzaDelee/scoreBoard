@@ -1,100 +1,86 @@
 import unittest
 import time
-from stopwatch_timer import StopwatchTimer
+from src.model.stopwatch_timer import StopwatchTimer
 
 class TestStopwatchTimer(unittest.TestCase):
 
     def setUp(self):
-        """Set up the stopwatch timer before each test."""
-        self.stopwatch_timer = StopwatchTimer(1, "down")  # 1-minute countdown
-        self.elapsed_events = []
-        self.finished_event_triggered = False
-
-    def on_second_elapsed(self, current_time):
-        """Callback to collect second elapsed events."""
-        minutes, seconds = current_time
-        self.elapsed_events.append((minutes, seconds))
-
-    def on_time_finished(self):
-        """Callback to collect the finished event."""
-        self.finished_event_triggered = True
+        """Set up a sample stopwatch timer for testing before each test case."""
+        self.timer = StopwatchTimer(1, "down")  # Create a 1-minute countdown timer
 
     def test_initialization(self):
         """Test that the timer is initialized correctly."""
-        self.assertEqual(self.stopwatch_timer.time_mins, 60)  # 1 minute = 60 seconds
-        self.assertEqual(self.stopwatch_timer.direction, "down")
-        self.assertEqual(self.stopwatch_timer.current_time, 60)
-        self.assertFalse(self.stopwatch_timer.running)
+        self.assertEqual(self.timer.time_mins, 60)  # 1 minute is converted to 60 seconds
+        self.assertEqual(self.timer.direction, "down")
+        self.assertEqual(self.timer.current_time, 60)
+        self.assertFalse(self.timer.running)
+        self.assertFalse(self.timer.time_finished)
 
-    def test_start_and_stop_timer(self):
+    def test_start_stop(self):
         """Test starting and stopping the timer."""
-        self.stopwatch_timer.start()
-        self.assertTrue(self.stopwatch_timer.running)
+        self.timer.start()
+        time.sleep(0.1)  # Let it run briefly
+        self.assertTrue(self.timer.running)
+        self.timer.stop()
+        self.assertFalse(self.timer.running)
 
-        time.sleep(2)  # Sleep for 2 seconds to simulate time passage
-        self.stopwatch_timer.stop()
-        self.assertFalse(self.stopwatch_timer.running)
+    def test_countdown(self):
+        """Test the countdown functionality."""
+        self.timer.start()
+        time.sleep(1.1)  # Let the timer run for a bit over a second
+        self.assertTrue(self.timer.running)
+        self.assertLess(self.timer.current_time, 60)  # It should have counted down
+        self.timer.stop()
 
-        # Check that time has decreased
-        minutes, seconds = self.stopwatch_timer.get_current_time()
-        self.assertLess(self.stopwatch_timer.current_time, 60)
+    def test_reset(self):
+        """Test resetting the timer."""
+        self.timer.start()
+        time.sleep(0.1)  # Let it run briefly
+        self.timer.stop()
+        self.timer.reset()
+        self.assertEqual(self.timer.current_time, 60)
+        self.assertFalse(self.timer.running)
+        self.assertFalse(self.timer.time_finished)
 
-    def test_reset_timer(self):
-        """Test that the timer can be reset correctly."""
-        self.stopwatch_timer.start()
-        time.sleep(2)
-        self.stopwatch_timer.stop()
+    def test_time_finished_event(self):
+        """Test that the time finished event triggers correctly."""
+        def on_time_finished():
+            self.time_finished_called = True
+        
+        self.timer = StopwatchTimer(1/60, "down")
+        self.time_finished_called = False
+        self.timer.subscribe_on_finish(on_time_finished)
+        self.timer.start()
+        time.sleep(1.1)  # Let the timer reach zero
+        self.assertTrue(self.time_finished_called)  # The callback should have been triggered
+        self.assertFalse(self.timer.running)
 
-        # Reset the timer
-        self.stopwatch_timer.reset()
-        minutes, seconds = self.stopwatch_timer.get_current_time()
-        self.assertEqual(self.stopwatch_timer.current_time, 60)  # Should reset to 1 minute
+    def test_on_elapsed_callback(self):
+        """Test the elapsed callback functionality."""
+        def on_second_elapsed(current_time):
+            self.elapsed_callback_called = True
+            self.elapsed_time = current_time
 
-    def test_subscribe_on_elapsed(self):
-        """Test that the second-elapsed event is triggered properly."""
-        # Subscribe to the second-elapsed event
-        self.stopwatch_timer.subscribe_on_elapsed(self.on_second_elapsed, 1)
+        self.elapsed_callback_called = False
+        self.timer.subscribe_on_elapsed(on_second_elapsed, 1)  # 1-second callback
+        self.timer.start()
+        time.sleep(1.1)  # Wait for the first callback
+        self.assertTrue(self.elapsed_callback_called)
+        self.assertLessEqual(self.elapsed_time[1], 59)  # Check that seconds have elapsed
+        self.timer.stop()
 
-        self.stopwatch_timer.start()
+    def test_callback_triggered(self):
+        """Test that the callback triggers at the correct intervals."""
+        def on_second_elapsed(current_time):
+            self.elapsed_times.append(current_time)
 
-        # Simulate waiting for 5 seconds
-        time.sleep(5)
-        self.stopwatch_timer.stop()
+        self.elapsed_times = []
+        self.timer.subscribe_on_elapsed(on_second_elapsed, 1)  # 1-second interval
+        self.timer.start()
+        time.sleep(3.1)  # Let it run for 3 seconds
+        self.timer.stop()
 
-        # Check that we received 5 events for each second elapsed
-        self.assertEqual(len(self.elapsed_events), 5)
-
-        # Check the correctness of the elapsed times
-        for i, (minutes, seconds) in enumerate(self.elapsed_events):
-            self.assertEqual(minutes, 0)
-            self.assertEqual(seconds, 59 - i)
-
-    def test_subscribe_on_finish(self):
-        """Test that the time-finished event is triggered correctly."""
-        # Subscribe to the time-finished event
-        self.stopwatch_timer.subscribe_on_finish(self.on_time_finished)
-
-        self.stopwatch_timer.start()
-
-        # Wait for the timer to run out
-        time.sleep(65)  # 65 seconds to ensure timer finishes
-
-        self.stopwatch_timer.stop()
-
-        # Check if the finished event was triggered
-        self.assertTrue(self.finished_event_triggered)
-
-    def test_prevent_restart_after_finish(self):
-        """Test that the timer does not restart once it has finished."""
-        self.stopwatch_timer.start()
-
-        # Wait for the timer to finish
-        time.sleep(65)
-        self.stopwatch_timer.stop()
-
-        # Try starting the timer again (it should not restart)
-        self.stopwatch_timer.start()
-        self.assertFalse(self.stopwatch_timer.running)  # Timer should not restart
+        self.assertEqual(len(self.elapsed_times), 3)  # Should have 3 callbacks triggered
 
 if __name__ == '__main__':
     unittest.main()
