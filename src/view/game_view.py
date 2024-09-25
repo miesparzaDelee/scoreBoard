@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QLabel, QVBoxLayout, QWidget, QPushButton, QHBoxLayout
+from PyQt5.QtWidgets import QLabel, QVBoxLayout, QWidget, QPushButton, QHBoxLayout, QInputDialog
 from PyQt5.QtGui import QPixmap
 
 class GameView(QWidget):
@@ -29,11 +29,15 @@ class GameView(QWidget):
             self.team2_logo.setPixmap(QPixmap(team2_logo_path))
 
         # Buttons to update score
-        self.team1_button = QPushButton('Add Point to Team 1')
-        self.team2_button = QPushButton('Add Point to Team 2')
+        self.team1_button = QPushButton('Add Point')
+        self.team2_button = QPushButton('Add Point')
         
         self.team1_button.clicked.connect(self.viewmodel.increment_team1_score)  # Use viewmodel command
         self.team2_button.clicked.connect(self.viewmodel.increment_team2_score)  # Use viewmodel command
+
+        # Click on team names to change them
+        self.team1_name.mousePressEvent = self.change_team1_name
+        self.team2_name.mousePressEvent = self.change_team2_name
 
         # Layout for Team 1
         team1_layout = QVBoxLayout()
@@ -61,6 +65,8 @@ class GameView(QWidget):
         # Subscribe to score changes
         self.viewmodel.add_property_changed_listener("team1_score", self.update_team1_score)
         self.viewmodel.add_property_changed_listener("team2_score", self.update_team2_score)
+        self.viewmodel.add_property_changed_listener("team1_name", self.update_team1_name)
+        self.viewmodel.add_property_changed_listener("team2_name", self.update_team2_name)
 
     def update_team1_score(self):
         """Update the displayed score for Team 1 when the property changes."""
@@ -69,3 +75,23 @@ class GameView(QWidget):
     def update_team2_score(self):
         """Update the displayed score for Team 2 when the property changes."""
         self.team2_score.setText(str(self.viewmodel.team2_score))
+
+    def update_team1_name(self):
+        """Update the displayed name for Team 1 when the property changes."""
+        self.team1_name.setText(self.viewmodel.team1_name)
+
+    def update_team2_name(self):
+        """Update the displayed name for Team 2 when the property changes."""
+        self.team2_name.setText(self.viewmodel.team2_name)
+
+    def change_team1_name(self, event):
+        """Prompt for a new name for Team 1 when clicked."""
+        new_name, ok = QInputDialog.getText(self, 'Change Team 1 Name', 'Enter new name:')
+        if ok:
+            self.viewmodel.team1_name = new_name
+
+    def change_team2_name(self, event):
+        """Prompt for a new name for Team 2 when clicked."""
+        new_name, ok = QInputDialog.getText(self, 'Change Team 2 Name', 'Enter new name:')
+        if ok:
+            self.viewmodel.team2_name = new_name

@@ -17,6 +17,24 @@ class GameViewModel(PropertyChangedNotifier):
     @property
     def team2_score(self):
         return self._game_model.team2.score  # Expose the team2 score
+    
+    @property
+    def team1_name(self):
+        return self._game_model.team1.name
+
+    @team1_name.setter
+    def team1_name(self, value):
+        self._game_model.team1.name = value  # Set the team1 name
+        self.notify_property_changed("team1_name")
+
+    @property
+    def team2_name(self):
+        return self._game_model.team2.name
+
+    @team2_name.setter
+    def team2_name(self, value):
+        self._game_model.team2.name = value  # Set the team1 name
+        self.notify_property_changed("team2_name")
 
     def increment_team1_score(self):
         self._game_model.increment_team_score(1)  # Call model to increment score
@@ -25,7 +43,6 @@ class GameViewModel(PropertyChangedNotifier):
     def increment_team2_score(self):
         self._game_model.increment_team_score(2)  # Call model to increment score
         self.notify_property_changed("team2_score")  # Notify the UI of the change
-
 
 # Example to demonstrate the working of GameViewModel
 if __name__ == "__main__":
@@ -42,6 +59,8 @@ if __name__ == "__main__":
         print(f"Property '{property_name}' changed")
         print(f"Team 1 Score: {game_vm.team1_score}")
         print(f"Team 2 Score: {game_vm.team2_score}")
+        print(f"Team 1 Name: {game_vm.team1_name}")
+        print(f"Team 2 Name: {game_vm.team2_name}")
     
     # Subscribe to property changes
     game_vm.subscribe_property_changed(on_property_changed)
@@ -55,3 +74,8 @@ if __name__ == "__main__":
 
     print("\nIncrementing Team 1 Score again:")
     game_vm.increment_team1_score()
+
+    print("\nSetting a new name:")
+    game_vm.team1_name = "Chivas"
+    game_vm.team2_name = "America"
+    

@@ -1,5 +1,11 @@
+import sys
+import os
+
+# Add multiple directories to sys.path
+sys.path.append(os.path.join(os.path.dirname(__file__), '../src/model'))
+
 import unittest
-from src.model.game_model import GameModel
+from game_model import GameModel
 
 class TestGameModel(unittest.TestCase):
     
@@ -31,6 +37,18 @@ class TestGameModel(unittest.TestCase):
         # Test incrementing by custom points
         self.game.increment_team_score(2, 5)
         self.assertEqual(self.game.team2.score, 6)
+    
+    def test_set_team_name(self):
+        # Initialize the game model
+        game_model = GameModel()
 
+        # Set new team names
+        game_model.set_team_name(1, "New Team 1")
+        game_model.set_team_name(2, "New Team 2")
+
+        # Verify the team names have been updated
+        self.assertEqual(game_model.team1.name, "New Team 1")
+        self.assertEqual(game_model.team2.name, "New Team 2")
+        
 if __name__ == '__main__':
     unittest.main()
