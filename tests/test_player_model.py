@@ -1,5 +1,5 @@
 import unittest
-from src.model.player_model import PlayerModel
+from model.player_model import PlayerModel
 
 class TestPlayerModel(unittest.TestCase):
 

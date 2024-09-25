@@ -1,5 +1,5 @@
 import unittest
-from src.model.team_model import TeamModel
+from model.team_model import TeamModel
 
 class TestTeamModel(unittest.TestCase):
 

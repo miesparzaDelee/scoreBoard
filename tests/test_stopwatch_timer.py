@@ -1,6 +1,6 @@
 import unittest
 import time
-from src.model.stopwatch_timer import StopwatchTimer
+from model.stopwatch_timer import StopwatchTimer
 
 class TestStopwatchTimer(unittest.TestCase):
 
