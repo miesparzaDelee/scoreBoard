@@ -8,8 +8,6 @@ __pycache__/
 venv/
 ENV/
 
-.vscode/
-
 .pytest_cache/
 
 # PyQt build files

@@ -29,7 +29,7 @@ class GameViewModel(PropertyChangedNotifier):
 
 # Example to demonstrate the working of GameViewModel
 if __name__ == "__main__":
-    from game_model import GameModel
+    from model.game_model import GameModel
     
     # Initialize the game model
     game_model = GameModel()
