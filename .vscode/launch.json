@@ -1,0 +1,16 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+
+        {
+            "name": "Run Scoreboard Program",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/main.py",  // Path to your main program file
+            "console": "integratedTerminal",             // Runs in the integrated terminal
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}/src;${workspaceFolder}/src/model;${workspaceFolder}/src/vm;${workspaceFolder}/src/view;"   // Adds the 'src' folder to PYTHONPATH
+            }
+        }
+    ]
+}

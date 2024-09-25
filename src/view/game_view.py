@@ -8,23 +8,23 @@ class GameView(QWidget):
         
         # Team 1 UI Elements
         self.team1_logo = QLabel()
-        self.team1_name = QLabel(self.viewmodel.get_team1_name())
-        self.team1_description = QLabel(self.viewmodel.get_team1_description())
-        self.team1_score = QLabel(self.viewmodel.get_team1_score())
+        self.team1_name = QLabel(self.viewmodel._game_model.team1.name)  # Directly use the model
+        self.team1_description = QLabel(self.viewmodel._game_model.team1.description)
+        self.team1_score = QLabel(str(self.viewmodel.team1_score))  # Bind to viewmodel property
 
         # Load team 1 logo if available
-        team1_logo_path = self.viewmodel.get_team1_logo()
+        team1_logo_path = self.viewmodel._game_model.team1.image_logo
         if team1_logo_path:
             self.team1_logo.setPixmap(QPixmap(team1_logo_path))
 
         # Team 2 UI Elements
         self.team2_logo = QLabel()
-        self.team2_name = QLabel(self.viewmodel.get_team2_name())
-        self.team2_description = QLabel(self.viewmodel.get_team2_description())
-        self.team2_score = QLabel(self.viewmodel.get_team2_score())
+        self.team2_name = QLabel(self.viewmodel._game_model.team2.name)
+        self.team2_description = QLabel(self.viewmodel._game_model.team2.description)
+        self.team2_score = QLabel(str(self.viewmodel.team2_score))  # Bind to viewmodel property
 
         # Load team 2 logo if available
-        team2_logo_path = self.viewmodel.get_team2_logo()
+        team2_logo_path = self.viewmodel._game_model.team2.image_logo
         if team2_logo_path:
             self.team2_logo.setPixmap(QPixmap(team2_logo_path))
 
@@ -32,8 +32,8 @@ class GameView(QWidget):
         self.team1_button = QPushButton('Add Point to Team 1')
         self.team2_button = QPushButton('Add Point to Team 2')
         
-        self.team1_button.clicked.connect(self.update_team1_score)
-        self.team2_button.clicked.connect(self.update_team2_score)
+        self.team1_button.clicked.connect(self.viewmodel.increment_team1_score)  # Use viewmodel command
+        self.team2_button.clicked.connect(self.viewmodel.increment_team2_score)  # Use viewmodel command
 
         # Layout for Team 1
         team1_layout = QVBoxLayout()
@@ -58,10 +58,14 @@ class GameView(QWidget):
 
         self.setLayout(main_layout)
 
+        # Subscribe to score changes
+        self.viewmodel.add_property_changed_listener("team1_score", self.update_team1_score)
+        self.viewmodel.add_property_changed_listener("team2_score", self.update_team2_score)
+
     def update_team1_score(self):
-        self.viewmodel.update_team_score(1)
-        self.team1_score.setText(self.viewmodel.get_team1_score())
+        """Update the displayed score for Team 1 when the property changes."""
+        self.team1_score.setText(str(self.viewmodel.team1_score))
 
     def update_team2_score(self):
-        self.viewmodel.update_team_score(2)
-        self.team2_score.setText(self.viewmodel.get_team2_score())
+        """Update the displayed score for Team 2 when the property changes."""
+        self.team2_score.setText(str(self.viewmodel.team2_score))
