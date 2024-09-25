@@ -1,5 +1,11 @@
+import sys
+import os
+
+# Add multiple directories to sys.path
+sys.path.append(os.path.join(os.path.dirname(__file__), '../src/model'))
+
 import unittest
-from model.game_model import GameModel
+from game_model import GameModel
 
 class TestGameModel(unittest.TestCase):
     

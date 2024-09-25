@@ -1,6 +1,12 @@
+import sys
+import os
+
+# Add multiple directories to sys.path
+sys.path.append(os.path.join(os.path.dirname(__file__), '../src/model'))
+
 import unittest
 import time
-from model.stopwatch_timer import StopwatchTimer
+from stopwatch_timer import StopwatchTimer
 
 class TestStopwatchTimer(unittest.TestCase):
 
