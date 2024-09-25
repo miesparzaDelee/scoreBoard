@@ -16,5 +16,10 @@
         "./src/model",
         "./src/vm",
         "./src/view"
+    ],
+    "cSpell.words": [
+        "MVVM",
+        "pytest",
+        "venv"
     ]
 }

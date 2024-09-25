@@ -53,10 +53,11 @@ pip install -r requirements.txt
 ```
 
 This will install:
+
 - **PyQt5**: For the user interface.
 - **pytest**: For running unit tests.
 
-## Running the Application
+## Running the Application from Terminal
 
 After the dependencies are installed, you can run the application using the following command:
 
@@ -66,7 +67,7 @@ python src/main.py
 
 This will launch the sports scoreboard interface.
 
-## Running Unit Tests
+## Running Unit Tests from Terminal
 
 To run unit tests for the business logic, make sure you are in the root directory of the project and then run:
 
@@ -87,7 +88,7 @@ sports-scoreboard/
 ├── .gitignore            # Git ignore file
 ├── src/                  # Source code for the application
 │   ├── model/            # Model layer (business logic)
-│   ├── viewmodel/        # ViewModel layer (connects model and view)
+│   ├── vm/        # ViewModel layer (connects model and view)
 │   ├── view/             # View layer (UI components)
 │   └── main.py           # Application entry point
 └── tests/                # Unit tests for the application
@@ -99,11 +100,12 @@ sports-scoreboard/
 - **Main Entry Point** (`src/main.py`): The entry point for running the application.
 - **Unit Tests** (`tests/`): Unit tests for the model and logic.
 
-## Development Environment Setup
+## VSCODE Development Environment Setup
 
 This project uses VSCode to manage and run different components of the application, such as running the main app, running individual files for testing or usage examples, and running unit tests. Below is a guide to help you run and debug the code effectively.
 
 ### Running or Debugging the Application
+
 To run or debug the full application:
 
 1. Open the **Run and Debug** tab on the left side panel in VSCode (shortcut: `Ctrl+Shift+D`).
@@ -113,6 +115,7 @@ To run or debug the full application:
 This will launch the entire application and execute the code from the `src/main.py` file.
 
 ### Running a Single File with the Run File Button
+
 VSCode also allows you to quickly run or debug individual files using the **Run Python File** button:
 
 1. Open the Python file you want to run, for example, `game_viewmodel.py`.
@@ -120,11 +123,13 @@ VSCode also allows you to quickly run or debug individual files using the **Run 
 
 This will run the file directly in the integrated terminal. If the file includes a `__main__` section (e.g., usage example code), that section will be executed.
 
-#### Important Notes:
+#### Important Notes
+
 - Ensure your Python environment is correctly set up in VSCode.
 - The `PYTHONPATH` is dynamically set in the code to include the `src` folder for module imports. This is essential when running individual files.
 
 ### Running Unit Tests
+
 To run unit tests:
 
 1. Open the **Testing** tab in VSCode (shortcut: `Ctrl+Shift+T`).
@@ -132,4 +137,3 @@ To run unit tests:
 3. You can also run or debug individual tests by clicking on the test cases listed in the **Testing** tab.
 
 The tests are configured to automatically discover and run the test files from the `tests` directory.
-
