@@ -99,6 +99,37 @@ sports-scoreboard/
 - **Main Entry Point** (`src/main.py`): The entry point for running the application.
 - **Unit Tests** (`tests/`): Unit tests for the model and logic.
 
-## License
+## Development Environment Setup
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project uses VSCode to manage and run different components of the application, such as running the main app, running individual files for testing or usage examples, and running unit tests. Below is a guide to help you run and debug the code effectively.
+
+### Running or Debugging the Application
+To run or debug the full application:
+
+1. Open the **Run and Debug** tab on the left side panel in VSCode (shortcut: `Ctrl+Shift+D`).
+2. Select the configuration labeled **"Run Scoreboard Program"** from the dropdown.
+3. Click the **green play button** or hit `F5` to run the app.
+
+This will launch the entire application and execute the code from the `src/main.py` file.
+
+### Running a Single File with the Run File Button
+VSCode also allows you to quickly run or debug individual files using the **Run Python File** button:
+
+1. Open the Python file you want to run, for example, `game_viewmodel.py`.
+2. Click the **Run Python File** button in the top right corner of the editor or use the shortcut `Ctrl+F5`.
+
+This will run the file directly in the integrated terminal. If the file includes a `__main__` section (e.g., usage example code), that section will be executed.
+
+#### Important Notes:
+- Ensure your Python environment is correctly set up in VSCode.
+- The `PYTHONPATH` is dynamically set in the code to include the `src` folder for module imports. This is essential when running individual files.
+
+### Running Unit Tests
+To run unit tests:
+
+1. Open the **Testing** tab in VSCode (shortcut: `Ctrl+Shift+T`).
+2. Click **Run Tests** to execute all available unit tests in the project.
+3. You can also run or debug individual tests by clicking on the test cases listed in the **Testing** tab.
+
+The tests are configured to automatically discover and run the test files from the `tests` directory.
+
