@@ -4,9 +4,9 @@ from team_model import TeamModel
 class GameModel:
     def __init__(self):
         # Initialize the game with two teams
-        self.team1 = TeamModel("Team 1")
-        self.team2 = TeamModel("Team 2")
-        self.gameTime = StopwatchTimer(15,"up")
+        self.team1 : TeamModel = TeamModel("Team 1")
+        self.team2 : TeamModel = TeamModel("Team 2")
+        self.gameTime : StopwatchTimer = StopwatchTimer(15,"up")
         self.gameTime.subscribe_on_elapsed(self.on_timer_tick, 1)
 
     def increment_team_score(self, team_number, points=1):

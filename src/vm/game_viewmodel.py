@@ -1,10 +1,11 @@
 from PropertyChangedNotifier import PropertyChangedNotifier
 from Command import Command
+from model.game_model import GameModel
 
 class GameViewModel(PropertyChangedNotifier):
-    def __init__(self, game_model):
+    def __init__(self, game_model: GameModel):
         super().__init__()
-        self._game_model = game_model  # Store the reference to the model
+        self._game_model:GameModel = game_model  # Store the reference to the model
 
         # Commands for updating the scores
         self.increment_team1_score_command = Command(self.increment_team1_score)

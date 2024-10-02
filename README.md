@@ -95,7 +95,7 @@ sports-scoreboard/
 ```
 
 - **Model Layer** (`src/model/`): Handles the core game logic (teams, scores, etc.).
-- **ViewModel Layer** (`src/viewmodel/`): Connects the data between the Model and View.
+- **ViewModel Layer** (`src/vm/`): Connects the data between the Model and View.
 - **View Layer** (`src/view/`): Defines the user interface with PyQt5.
 - **Main Entry Point** (`src/main.py`): The entry point for running the application.
 - **Unit Tests** (`tests/`): Unit tests for the model and logic.
