@@ -137,3 +137,129 @@ To run unit tests:
 3. You can also run or debug individual tests by clicking on the test cases listed in the **Testing** tab.
 
 The tests are configured to automatically discover and run the test files from the `tests` directory.
+
+
+# Programming Paradigm and Feature Addition Guidelines
+
+This project follows the **Model-View-ViewModel (MVVM)** architectural pattern, which separates the application logic (business rules) from the user interface (UI) layer. This structure ensures clean separation of concerns and makes the application easier to maintain, scale, and test.
+
+## Key Components
+
+### 1. **Model**
+
+- The model contains the **business logic** and represents the state of the application.
+- It holds core data (e.g., team scores, game time, periods) and implements logic to manipulate that data (e.g., incrementing a score, changing periods).
+- Models are fully **unit tested** to ensure the correctness of business rules and data manipulation.
+
+### 2. **ViewModel**
+
+- The ViewModel acts as an **intermediary** between the Model and the View.
+- It exposes **properties** and **commands** for the View to bind to, making the ViewModel responsible for providing the UI with data (from the Model) and handling user input (via commands).
+- The ViewModel does not directly reference UI components; instead, it manages application state and logic in a way that can be consumed by the View.
+- `__main__` blocks are used in ViewModels to provide examples of usage and demonstrate their behavior without requiring a UI.
+
+### 3. **View**
+
+- The View is the **UI layer** and is responsible for rendering data and responding to user actions.
+- It binds to the ViewModel to display data and execute commands (e.g., displaying a score, allowing the user to change the game period).
+- The View does not contain business logic; it focuses purely on user interaction.
+
+---
+
+## How to Add New Features
+
+The following steps outline how to add new features to the project following the MVVM pattern. The focus is on ensuring clean separation of concerns, comprehensive testing for the model, and clear examples for the ViewModel.
+
+### 1. **Update the Model**
+
+- **Add new data or logic** to the model class that represents the core of the feature.
+  - Example: If you’re adding game periods, add properties like `current_period` and `total_periods` to the `GameModel`.
+- Add methods to the model to manipulate the feature's data.
+  - Example: `next_period()` in `GameModel` to advance the game to the next period.
+- **Write unit tests** to cover the new feature in the model. The tests should verify that the model behaves as expected, especially for edge cases.
+
+   ```python
+   import unittest
+   from model.game_model import GameModel
+
+   class TestGameModel(unittest.TestCase):
+       def test_next_period(self):
+           game = GameModel()
+           self.assertEqual(game.current_period, 1)
+           game.next_period()
+           self.assertEqual(game.current_period, 2)
+
+       def test_no_periods_after_max(self):
+           game = GameModel()
+           for _ in range(5):  # More than total periods
+               game.next_period()
+           self.assertEqual(game.current_period, game.total_periods)
+
+   if __name__ == '__main__':
+       unittest.main()
+   ```
+
+### 2. **Update the ViewModel**
+
+- **Expose the feature** from the model via properties or commands in the ViewModel.
+  - Example: Add a `current_period` property in the `GameViewModel` that returns the current period from the `GameModel`.
+- Add commands to manipulate the model from the ViewModel.
+  - Example: Add a `next_period()` command to the `GameViewModel` that calls the corresponding method in the `GameModel`.
+- Include a `__main__` block that shows how the ViewModel interacts with the model. This serves as an example or informal test for the ViewModel logic.
+
+   ```python
+   if __name__ == "__main__":
+       game_model = GameModel()
+       game_vm = GameViewModel(game_model)
+
+       print(f"Initial period: {game_vm.current_period}")
+       game_vm.next_period()
+       print(f"After next period: {game_vm.current_period}")
+   ```
+
+### 3. **Update the View**
+
+- **Add UI elements** to display and interact with the new feature in the view.
+  - Example: Add a `QLabel` to display the current period and a `QPushButton` to allow the user to switch to the next period.
+- **Bind the ViewModel** properties and commands to the UI components, ensuring the ViewModel handles all the logic and the View is purely for interaction.
+- Manually test the View by running the application and verifying that the UI updates correctly when interacting with the new feature.
+
+   ```python
+   from PyQt5.QtWidgets import QLabel, QVBoxLayout, QWidget, QPushButton
+
+   class GameView(QWidget):
+       def __init__(self, vm: GameViewModel):
+           super().__init__()
+           self.vm = vm
+
+           # Period Display and Button
+           self.period_label = QLabel(f"Period: {self.vm.current_period} of {self.vm.total_periods}")
+           self.next_period_button = QPushButton('Next Period')
+           self.next_period_button.clicked.connect(self.vm.next_period)
+
+           # Layout
+           layout = QVBoxLayout()
+           layout.addWidget(self.period_label)
+           layout.addWidget(self.next_period_button)
+           self.setLayout(layout)
+
+           # Subscribe to period change
+           self.vm.add_property_changed_listener("current_period", self.update_period_display)
+
+       def update_period_display(self):
+           """Update the displayed period when it changes."""
+           self.period_label.setText(f"Period: {self.vm.current_period} of {self.vm.total_periods}")
+   ```
+
+### 4. **Testing and Iteration**
+
+- **Run unit tests** for the model to ensure the business logic is correct.
+- Test the ViewModel with the `__main__` block to ensure that it interacts with the model properly.
+- **Manually test the view** by running the application to check how the UI interacts with the new feature.
+- Iterate as needed to refine the feature.
+
+---
+
+### Conclusion
+
+The MVVM pattern ensures that features are added in a modular way, with clear separation between the business logic (Model), the interaction logic (ViewModel), and the UI (View). The model is fully unit tested, and `__main__` blocks in the ViewModel provide usage examples to demonstrate how the logic works. This approach enables scalability and maintainability, making the application robust and adaptable to future changes.

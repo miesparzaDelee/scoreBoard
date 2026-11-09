@@ -53,7 +53,7 @@ class TestGameModel(unittest.TestCase):
         
     def test_start_pause_clock(self):
         game_model = GameModel()
-        
+        game_model.set_game_clock(1,"up")
         if(game_model.is_game_clock_running()):
             game_model.pause_continue_game_clock()
         

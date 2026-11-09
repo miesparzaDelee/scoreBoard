@@ -9,12 +9,12 @@ class Command:
         self.execute_function = execute_function
         self.can_execute_function = can_execute_function
 
-    def execute(self):
+    def execute(self,*args, **kwargs):
         """
         Execute the command's function if it can be executed.
         """
         if self.can_execute():
-            self.execute_function()
+            self.execute_function(*args, **kwargs)
 
     def can_execute(self):
         """
